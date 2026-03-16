@@ -18,6 +18,10 @@ public:
     int HentLiv() {
         return Liv;
     }
+
+    void VisInfo() {
+        std::cout << "Navn " << Navn << ", Liv " << Liv << "\n"; 
+    }
 };
 
 class Spiller : public Figur {
@@ -29,6 +33,15 @@ public:
 
     }
     
+};
+
+class Magiker : public Spiller {
+public:
+    Magiker(std::string navn) : Spiller(navn) {}
+
+    void KastTrylleformel() {
+        std::cout << "Magiker kaster Trylle formel!\n";
+    }
 };
 
 class Fiende : public Figur {
@@ -50,12 +63,16 @@ public:
 
 };
 
+
+
 int main() {
     Spiller spiller("Hero");
+    Magiker magiker("Gandalf");
     Fiende fiende("Zombie");
     Boss boss("Mega Zombie");
 
     spiller.Angrip();
+    magiker.KastTrylleformel();
     fiende.Angrip();
     boss.SuperAngrip();
 
@@ -64,6 +81,11 @@ int main() {
 
     std::cout << "Fiende har " << fiende.HentLiv() << " liv igjen.\n";
     std::cout << "Boss har " << boss.HentLiv() << " liv igjen.\n";
+
+    spiller.VisInfo();
+    magiker.VisInfo();
+    fiende.VisInfo();
+    boss.VisInfo();
 
     return 0;
 }
