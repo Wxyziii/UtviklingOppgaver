@@ -1,4 +1,7 @@
+#include <algorithm>
 #include <iostream>
+#include <string>
+#include <utility>
 
 class Figur {
 private:
@@ -6,27 +9,24 @@ private:
     int Liv;
 
 public:
-    Figur(std::string navn, int liv) {
-        Navn = navn;
-        Liv = liv;
-    }
+    Figur(std::string navn, int liv) : Navn(std::move(navn)), Liv(std::max(0, liv)) {}
 
     void TaSkade(int skade) {
-        Liv -= skade;
+        Liv = std::max(0, Liv - std::max(0, skade));
     }
 
-    int HentLiv() {
+    int HentLiv() const {
         return Liv;
     }
 
-    void VisInfo() {
-        std::cout << "Navn " << Navn << ", Liv " << Liv << "\n"; 
+    void VisInfo() const {
+        std::cout << "Navn " << Navn << ", Liv " << Liv << "\n";
     }
 };
 
 class Spiller : public Figur {
 public:
-    Spiller(std::string navn) : Figur(navn, 100) {}
+    explicit Spiller(std::string navn) : Figur(std::move(navn), 100) {}
 
     void Angrip() {
         std::cout << "Spiller angriper!\n";
@@ -37,7 +37,7 @@ public:
 
 class Magiker : public Spiller {
 public:
-    Magiker(std::string navn) : Spiller(navn) {}
+    explicit Magiker(std::string navn) : Spiller(std::move(navn)) {}
 
     void KastTrylleformel() {
         std::cout << "Magiker kaster Trylle formel!\n";
@@ -46,7 +46,7 @@ public:
 
 class Fiende : public Figur {
 public:
-    Fiende(std::string navn, int liv = 50) : Figur(navn, liv) {}
+    Fiende(std::string navn, int liv = 50) : Figur(std::move(navn), liv) {}
 
     void Angrip() {
         std::cout << "Fiende angriper!\n";
@@ -55,7 +55,7 @@ public:
 
 class Boss : public Fiende {
 public:
-    Boss(std::string navn) : Fiende(navn, 150) {}
+    explicit Boss(std::string navn) : Fiende(std::move(navn), 150) {}
 
     void SuperAngrip() {
         std::cout << "Bossen bruker et Super Angrep!\n";
